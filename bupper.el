@@ -29,7 +29,7 @@
 ;;; Code:
 
 (defun bupper--add-string-overlay-to-window (window string)
-  "Add the string `string` as overlay in `window` in the first visible position."
+  "Add the STRING `string` as overlay in `WINDOW` in the first visible position."
   (with-current-buffer (window-buffer window)
     (let ((ov (make-overlay (window-start window)
                             (+ 1 (window-start window)))))
@@ -41,7 +41,7 @@
       (overlay-put ov 'display string))))
 
 (defun bupper--remove-overlays-from-window (window)
-  "Remove all overlays from `window."
+  "Remove all overlays from `WINDOW."
   (with-current-buffer (window-buffer window)
     (remove-overlays)))
 
