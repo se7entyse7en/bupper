@@ -2,12 +2,14 @@
 
 ## Unreleased
 
+## [v0.1.1 - 2021-09-11](https://github.com/se7entyse7en/bupper/compare/v0.1.0...v0.1.1)
+
 ### Fixed
 
 - Fixed missing URL and Package-Requires information
 - Fixed clean byte-compilation and doc
 
-## [v0.0.0 - 2021-09-11](https://github.com/se7entyse7en/bupper/compare/v0.0.0...v0.1.0)
+## [v0.1.0 - 2021-09-11](https://github.com/se7entyse7en/bupper/compare/v0.0.0...v0.1.0)
 
 ### Added
 
