@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## [v0.1.2 - 2021-09-12](https://github.com/se7entyse7en/bupper/compare/v0.1.0...v0.1.2)
+
 ### Fixed
 
 - Fixed cleanup of overlays when target window selection is aborted

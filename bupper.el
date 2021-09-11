@@ -5,7 +5,7 @@
 ;; Author: Lou Marvin Caraig <loumarvincaraig@gmail.com>
 ;; URL: https://github.com/se7entyse7en/bupper
 ;; Package-Requires: ((emacs "24"))
-;; Version: 0.1.1
+;; Version: 0.1.2
 ;; Keywords: convenience, frames
 
 ;; This program is free software; you can redistribute it and/or modify
