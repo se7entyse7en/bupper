@@ -71,12 +71,13 @@
   "Prompt user to swap the buffer with the one of another window."
   (interactive)
   (bupper--add-string-overlays)
-  (let ((target-window (bupper--prompt-target-window)))
-    (let ((target-buffer (window-buffer target-window)))
-      (set-window-buffer target-window (current-buffer))
-      (set-window-buffer nil target-buffer)
-      (select-window target-window)))
-  (bupper--remove-string-overlays))
+  (unwind-protect
+   (let ((target-window (bupper--prompt-target-window)))
+     (let ((target-buffer (window-buffer target-window)))
+       (set-window-buffer target-window (current-buffer))
+       (set-window-buffer nil target-buffer)
+       (select-window target-window)))
+   (bupper--remove-string-overlays)))
 
 (provide 'bupper)
 
