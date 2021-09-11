@@ -3,7 +3,8 @@
 ;; Copyright (C) 2021  Lou Marvin Caraig
 
 ;; Author: Lou Marvin Caraig <loumarvincaraig@gmail.com>
-;; URL: https://example.com/package-name.el
+;; URL: https://github.com/se7entyse7en/bupper
+;; Package-Requires: ((emacs "24"))
 ;; Version: 0.1.0
 ;; Keywords: convenience, frames
 
@@ -28,7 +29,7 @@
 ;;; Code:
 
 (defun bupper--add-string-overlay-to-window (window string)
-  "Add the string `string` as overlay in `window` in the first visible position."
+  "Add the STRING `string` as overlay in `WINDOW` in the first visible position."
   (with-current-buffer (window-buffer window)
     (let ((ov (make-overlay (window-start window)
                             (+ 1 (window-start window)))))
@@ -40,7 +41,7 @@
       (overlay-put ov 'display string))))
 
 (defun bupper--remove-overlays-from-window (window)
-  "Remove all overlays from `window."
+  "Remove all overlays from `WINDOW."
   (with-current-buffer (window-buffer window)
     (remove-overlays)))
 
@@ -59,8 +60,7 @@
 (defun bupper--prompt-target-window ()
   "Prompt user to enter a number corresponding to the target window."
   (let ((n -1)
-        (total-windows (length (window-list)))
-        (valid-number nil))
+        (total-windows (length (window-list))))
     (while (or (< n 0)
                 (> n total-windows))
       (setq n (read-number "Target window number: ")))
