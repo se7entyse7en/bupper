@@ -3,7 +3,8 @@
 ;; Copyright (C) 2021  Lou Marvin Caraig
 
 ;; Author: Lou Marvin Caraig <loumarvincaraig@gmail.com>
-;; URL: https://example.com/package-name.el
+;; URL: https://github.com/se7entyse7en/bupper
+;; Package-Requires: ((emacs "24"))
 ;; Version: 0.1.0
 ;; Keywords: convenience, frames
 
