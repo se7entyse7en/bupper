@@ -60,8 +60,7 @@
 (defun bupper--prompt-target-window ()
   "Prompt user to enter a number corresponding to the target window."
   (let ((n -1)
-        (total-windows (length (window-list)))
-        (valid-number nil))
+        (total-windows (length (window-list))))
     (while (or (< n 0)
                 (> n total-windows))
       (setq n (read-number "Target window number: ")))
