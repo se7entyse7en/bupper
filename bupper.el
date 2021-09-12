@@ -28,17 +28,39 @@
 
 ;;; Code:
 
+(defface bupper-face
+;; '((:height 160)
+;;   (:weight ultra-bold)
+;;   (:foreground "red")
+;;   (:background "white")
+;;   (:box "red")))
+;; See also documentation for `defface' "type" for specifying `window-system'.
+  '((((class grayscale)
+      (background light)) (:background "DimGray"))
+    (((class grayscale)
+      (background dark))  (:background "LightGray"))
+    (((class color)
+      (background light)) (:foreground "White" :background "DarkOrange1"))
+    (((class color)
+      (background dark))  (:foreground "Black" :background "DarkOrange1")))
+  "Face used to highlight bupper window ID numbers."
+  :group 'cursor-flash)
+
 (defun bupper--add-string-overlay-to-window (window string)
   "Add the STRING `string` as overlay in `WINDOW` in the first visible position."
   (with-current-buffer (window-buffer window)
-    (let ((ov (make-overlay (window-start window)
-                            (+ 1 (window-start window)))))
-      (overlay-put ov 'face '((:height 160)
-                              (:weight ultra-bold)
-                              (:foreground "red")
-                              (:background "white")
-                              (:box "red")))
-      (overlay-put ov 'display string))))
+    (setq string (concat " " string " "))
+    (save-mark-and-excursion
+      (let ((pos (window-start window))
+            end-col ov)
+        (dotimes (x 3)
+          (goto-char pos)
+          (when (> 2 (setq end-col (progn (end-of-line) (current-column))))
+            (insert "   "))
+          (setq ov (make-overlay pos (+ 3 (goto-char pos))))
+          (overlay-put ov 'face 'bupper-face)
+          (overlay-put ov 'display (if (= x 1) string "   "))
+          (setq pos (1+ (line-end-position))))))))
 
 (defun bupper--remove-overlays-from-window (window)
   "Remove all overlays from `WINDOW."
