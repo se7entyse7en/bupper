@@ -29,12 +29,6 @@
 ;;; Code:
 
 (defface bupper-face
-;; '((:height 160)
-;;   (:weight ultra-bold)
-;;   (:foreground "red")
-;;   (:background "white")
-;;   (:box "red")))
-;; See also documentation for `defface' "type" for specifying `window-system'.
   '((((class grayscale)
       (background light)) (:background "DimGray"))
     (((class grayscale)
@@ -52,15 +46,17 @@
     (setq string (concat " " string " "))
     (save-mark-and-excursion
       (let ((pos (window-start window))
+            (width (length string))
             ov)
-        (dotimes (x 3)
-          (goto-char pos)
-          (when (> 2 (progn (end-of-line) (current-column)))
-            (insert "   "))
-          (setq ov (make-overlay pos (+ 3 (goto-char pos))))
-          (overlay-put ov 'face 'bupper-face)
-          (overlay-put ov 'display (if (= x 1) string "   "))
-          (setq pos (1+ (line-end-position))))))))
+        (let ((empty-row (make-string width ? )))
+          (dotimes (i 3)
+            (goto-char pos)
+            (when (> 2 (progn (end-of-line) (current-column)))
+              (insert empty-row))
+            (setq ov (make-overlay pos (+ 3 (goto-char pos))))
+            (overlay-put ov 'face 'bupper-face)
+            (overlay-put ov 'display (if (= i 1) string empty-row))
+            (setq pos (+ 1 (line-end-position)))))))))
 
 (defun bupper--remove-overlays-from-window (window)
   "Remove all overlays from `WINDOW."
