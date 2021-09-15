@@ -2,6 +2,20 @@
 
 ## Unreleased
 
+### Added
+
+- Defined `bupper-face` face so that it can be customized
+
+### Changed
+
+- Changed default overlay face
+- Make the overlays use a 3x3 for single digits and 4x3 for double digits numbers
+
+### Fixed
+
+- Fixed handling of buffers with less than 3 columns
+
+
 ## [v0.1.2 - 2021-09-12](https://github.com/se7entyse7en/bupper/compare/v0.1.0...v0.1.2)
 
 ### Fixed
