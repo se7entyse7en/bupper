@@ -40,6 +40,19 @@
   "Face used to highlight bupper window ID numbers."
   :group 'cursor-flash)
 
+(defmacro bupper--with-variable (var value &rest body)
+  "Run `body` with the symbol `var` temporary set to `value`."
+  `(let ((original-value ,var))
+    (setq ,var ,value)
+    (progn ,@body)
+    (setq ,var original-value)))
+
+(defun bupper--with-)
+
+;; use indirect buffers to solve dup numbers
+
+(macroexpand '(bupper--with-variable test 1 (message "N: %d" test)))
+
 (defun bupper--add-string-overlay-to-window (window string)
   "Add the STRING `string` as overlay in `WINDOW` in the first visible position."
   (with-current-buffer (window-buffer window)
@@ -51,8 +64,8 @@
         (let ((empty-row (make-string width ? )))
           (dotimes (i 3)
             (goto-char pos)
-            (when (> 2 (progn (end-of-line) (current-column)))
-              (insert empty-row))
+            ;; (when (> 2 (progn (end-of-line) (current-column)))
+            ;;   (insert empty-row))
             (setq ov (make-overlay pos (+ 3 (goto-char pos))))
             (overlay-put ov 'face 'bupper-face)
             (overlay-put ov 'display (if (= i 1) string empty-row))
