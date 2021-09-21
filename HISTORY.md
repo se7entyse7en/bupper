@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## [v0.2.0 - 2021-09-22](https://github.com/se7entyse7en/bupper/compare/v0.1.2...v0.2.0)
+
 ### Added
 
 - Defined `bupper-face` face so that it can be customized
@@ -17,7 +19,7 @@
 - Fixed handling of read-only buffers
 
 
-## [v0.1.2 - 2021-09-12](https://github.com/se7entyse7en/bupper/compare/v0.1.0...v0.1.2)
+## [v0.1.2 - 2021-09-12](https://github.com/se7entyse7en/bupper/compare/v0.1.1...v0.1.2)
 
 ### Fixed
 
