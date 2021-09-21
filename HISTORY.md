@@ -13,7 +13,8 @@
 
 ### Fixed
 
-- Fixed handling of buffers with less than 3 columns
+- Fixed handling of buffers with less than 3 columns and/or 3 rows
+- Fixed handling of read-only buffers
 
 
 ## [v0.1.2 - 2021-09-12](https://github.com/se7entyse7en/bupper/compare/v0.1.0...v0.1.2)
