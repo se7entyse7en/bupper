@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Fixed
+
+- Fixed duplicated overlay numbers for windows showing the same buffer
+
 ## [v0.2.0 - 2021-09-22](https://github.com/se7entyse7en/bupper/compare/v0.1.2...v0.2.0)
 
 ### Added
