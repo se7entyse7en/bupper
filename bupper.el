@@ -61,7 +61,10 @@
   (let ((content-map (make-hash-table :test 'equal)))
     (dolist (window (window-list))
       (with-current-buffer (window-buffer window)
-        (puthash (buffer-name) (list (point) (buffer-substring (point-min) (point-max))) content-map)))
+        (puthash
+         (buffer-name (buffer-base-buffer))
+         (list (point) (buffer-modified-p) (buffer-substring (point-min) (point-max)))
+         content-map)))
     content-map))
 
 (defun bupper--restore-content (content-map)
@@ -70,14 +73,16 @@
     (with-current-buffer (window-buffer window)
       (bupper--with-variable
        inhibit-read-only t
-       (let* ((value (gethash (buffer-name) content-map))
+       (let* ((key (buffer-name (buffer-base-buffer)))
+              (value (gethash key content-map))
               (pos (pop value))
+              (is-modified (pop value))
               (content (pop value)))
          (save-mark-and-excursion
            (goto-char (point-min))
            (delete-region (point-min) (point-max))
            (insert content)
-           (set-buffer-modified-p nil))
+           (set-buffer-modified-p is-modified))
          (set-window-point window pos))))))
 
 (defun bupper--add-string-overlay-to-window (window string)
@@ -87,19 +92,19 @@
      inhibit-read-only t
      (setq string (concat " " string " "))
      (save-mark-and-excursion
-       (let ((pos (window-start window))
-             (width (length string))
-             ov)
-         (let ((empty-row (make-string width ? )))
-           (dotimes (i 3)
-             (goto-char pos)
-             (bupper--ensure-enough-space width)
-             (let ((start pos)
-                   (end (+ width (goto-char pos))))
-               (setq ov (make-overlay start end))
-               (overlay-put ov 'face 'bupper-face)
-               (overlay-put ov 'display (if (= i 1) string empty-row))
-               (setq pos (+ 1 (line-end-position)))))))))))
+       (let* ((pos (window-start window))
+              (width (length string))
+              (empty-row (make-string width ? ))
+              ov)
+         (dotimes (i 3)
+           (goto-char pos)
+           (bupper--ensure-enough-space width)
+           (let ((start pos)
+                 (end (+ width (goto-char pos))))
+             (setq ov (make-overlay start end))
+             (overlay-put ov 'face 'bupper-face)
+             (overlay-put ov 'display (if (= i 1) string empty-row))
+             (setq pos (+ 1 (line-end-position))))))))))
 
 (defun bupper--remove-overlays-from-window (window)
   "Remove all overlays from `WINDOW."
@@ -112,6 +117,32 @@
     (dolist (window (window-list))
       (setq counter (+ counter 1))
       (bupper--add-string-overlay-to-window window (number-to-string counter)))))
+
+(defun bupper--make-indirect-buffers ()
+  "Create indirect buffers for each one."
+  (bupper--ensure-no-indirect-buffer)
+  (let ((counter 0))
+    (dolist (window (window-list))
+      (let* ((buffer (window-buffer window))
+             (target-buffer-name (buffer-name buffer))
+             (indirect-buffer-name (concat target-buffer-name "--bupper-" (number-to-string counter)))
+             (indirect-buffer (make-indirect-buffer buffer indirect-buffer-name t))
+             (win-start (window-start window)))
+        (setq counter (+ counter 1))
+        (set-window-buffer window indirect-buffer)
+        (set-window-start window win-start)))))
+
+(defun bupper--ensure-no-indirect-buffer ()
+  "Ensure that all indirect buffers are removed."
+  (dolist (buffer (buffer-list))
+    (if (string-match "--bupper-" (buffer-name buffer)) (kill-buffer buffer))))
+
+(defun bupper--restore-window-buffers ()
+  "Restore original buffers for each window."
+  (dolist (window (window-list))
+    (let* ((buffer (window-buffer window))
+           (original-buffer (buffer-base-buffer buffer)))
+      (if original-buffer (set-window-buffer window original-buffer)))))
 
 (defun bupper--remove-string-overlays ()
   "Remove string overlays from all windows."
@@ -131,16 +162,19 @@
 (defun bupper-swap ()
   "Prompt user to swap the buffer with the one of another window."
   (interactive)
+  (bupper--make-indirect-buffers)
   (let ((content-map (bupper--backup-content)))
     (bupper--add-string-overlays)
     (unwind-protect
-        (let ((target-window (bupper--prompt-target-window)))
-          (let ((target-buffer (window-buffer target-window)))
-            (set-window-buffer target-window (current-buffer))
-            (set-window-buffer nil target-buffer)
-            (select-window target-window)))
+        (let* ((target-window (bupper--prompt-target-window))
+               (target-buffer (window-buffer target-window)))
+          (set-window-buffer target-window (current-buffer))
+          (set-window-buffer nil target-buffer)
+          (select-window target-window)))
       (bupper--remove-string-overlays)
-      (bupper--restore-content content-map))))
+      (bupper--restore-content content-map)
+      (bupper--restore-window-buffers)
+      (bupper--ensure-no-indirect-buffer)))
 
 (provide 'bupper)
 
